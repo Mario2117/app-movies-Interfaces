@@ -21,21 +21,32 @@ class CardSwiper extends StatelessWidget {
     if( this.movies.length == 0) {
       return Container(
         width: double.infinity,
-        height: size.height * 0.5,
+        height: size.height * 0.45,
         child: Center(
           child: CircularProgressIndicator(),
         ),
       );
     }
 
-  
-
     return Container(
       width: double.infinity,
-      height: size.height * 0.5,
+      height: size.height * 0.45,
       child: Swiper(
         itemCount: movies.length,
-        layout: SwiperLayout.STACK,
+        layout: SwiperLayout.CUSTOM,
+        customLayoutOption: new CustomLayoutOption(
+            startIndex: -1,
+            stateCount: 3
+        ).addTranslate([
+          new Offset(-350.0, 10.0),
+          new Offset(0.0, 0.0),
+          new Offset(350.0, 10.0)
+        ]).addOpacity([0.6,1,0.6]
+        ).addRotate([
+          -10.0/180,
+          0.0,
+          10.0/180
+        ]),
         itemWidth: size.width * 0.6,
         itemHeight: size.height * 0.4,
         itemBuilder: ( _ , int index ) {

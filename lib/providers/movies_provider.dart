@@ -5,22 +5,30 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:peliculas/helpers/debouncer.dart';
+import 'package:peliculas/models/actor_model.dart';
 
 import 'package:peliculas/models/models.dart';
 import 'package:peliculas/models/search_response.dart';
 
 class MoviesProvider extends ChangeNotifier {
 
-  String _apiKey   = '1865f43a0549ca50d341dd9ab8b29f49';
+  String _apiKey   = '9aad50abb0e5a8d2b6bd496ad44b3386';
   String _baseUrl  = 'api.themoviedb.org';
-  String _language = 'es-ES';
+  String _language = 'en-US';
 
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies   = [];
+  List<Movie> topRatedMovies  = [];
 
   Map<int, List<Cast>> moviesCast = {};
-    
+  //Map<String, List<Movie>> actorCredits = {};
+  List<Movie> actorCredits = [];
+
+  //ActorDetails actor = ;
+  
+
   int _popularPage = 0;
+  int _topRatedPage = 0;
 
   final debouncer = Debouncer(
     duration: Duration( milliseconds: 500 ),
@@ -36,7 +44,7 @@ class MoviesProvider extends ChangeNotifier {
 
     this.getOnDisplayMovies();
     this.getPopularMovies();
-
+    this.getTopRatedMovies();
   }
 
   Future<String> _getJsonData( String endpoint, [int page = 1] ) async {
@@ -68,8 +76,21 @@ class MoviesProvider extends ChangeNotifier {
 
     final jsonData = await this._getJsonData('3/movie/popular', _popularPage );
     final popularResponse = PopularResponse.fromJson( jsonData );
+    print(popularResponse);
     
     popularMovies = [ ...popularMovies, ...popularResponse.results ];
+    notifyListeners();
+  }
+
+  getTopRatedMovies() async {
+
+    _topRatedPage++;
+
+    final jsonData = await this._getJsonData('3/movie/top_rated', _topRatedPage );
+    final topRatedResponse = PopularResponse.fromJson( jsonData );
+    print(topRatedResponse);
+    
+    topRatedMovies = [ ...topRatedMovies, ...topRatedResponse.results ];
     notifyListeners();
   }
 
@@ -83,6 +104,36 @@ class MoviesProvider extends ChangeNotifier {
     moviesCast[movieId] = creditsResponse.cast;
 
     return creditsResponse.cast;
+  }
+
+  Future<MovieDetails> getMovieDetails( int movieId ) async {
+
+    final jsonData = await this._getJsonData('3/movie/$movieId');
+    final movieDetailsResponse = MovieDetails.fromJson( jsonData );
+
+    MovieDetails movieDetail = movieDetailsResponse;
+
+    return movieDetail;
+  }
+
+  Future<ActorDetails> getActorDetails( int actorId ) async {
+
+    final jsonData = await this._getJsonData('3/person/$actorId');
+    final actorDetailsResponse = ActorDetails.fromJson( jsonData );
+
+    ActorDetails actorDetail = actorDetailsResponse;
+
+    return actorDetail;
+  }
+
+  Future<List<Movie>> getActorCredits( int actorId ) async {
+
+    final jsonData = await this._getJsonData('3/person/$actorId/movie_credits');
+    final actorCreditsResponse = ActorCredits.fromJson( jsonData );
+
+    actorCredits = actorCreditsResponse.cast;
+
+    return actorCredits;
   }
 
   Future<List<Movie>> searchMovies( String query ) async {

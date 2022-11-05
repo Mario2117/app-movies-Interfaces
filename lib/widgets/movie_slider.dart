@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:peliculas/models/models.dart';
 
 class MovieSlider extends StatefulWidget {
@@ -31,37 +32,33 @@ class _MovieSliderState extends State<MovieSlider> {
       if ( scrollController.position.pixels >= scrollController.position.maxScrollExtent - 500 ) {
         widget.onNextPage();
       }
-      
-
     });
 
   }
 
   @override
   void dispose() {
-    
-
-
     super.dispose();
   }
 
-
+ 
   @override
   Widget build(BuildContext context) {
+    
     return Container(
       width: double.infinity,
-      height: 260, 
+      height: 275, 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           
           if ( this.widget.title != null )
-            Padding(
-              padding: EdgeInsets.symmetric( horizontal: 20 ),
-              child: Text( this.widget.title!, style: TextStyle( fontSize: 20, fontWeight: FontWeight.bold ),),
+            Center(
+              //padding: EdgeInsets.symmetric( horizontal: 20 ),
+              child: Text( this.widget.title!, style: GoogleFonts.spaceMono(fontSize: 20, fontWeight: FontWeight.bold)),
             ),
 
-          SizedBox( height: 5 ),
+          SizedBox( height: 10 ),
 
           Expanded(
             child: ListView.builder(
@@ -88,7 +85,7 @@ class _MoviePoster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    print(movie.genreIds);
     movie.heroId = heroId;
 
     return Container(
@@ -122,6 +119,7 @@ class _MoviePoster extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
+            style: GoogleFonts.firaSans(),
           )
 
         ],

@@ -32,11 +32,13 @@ class MyApp extends StatelessWidget {
       routes: {
         'home':    ( _ ) => HomeScreen(),
         'details': ( _ ) => DetailsScreen(),
+        'actorDet': ( _ ) => ActorDetailsScreen(),
       },
       theme: ThemeData.light().copyWith(
         appBarTheme: AppBarTheme(
-          color: Colors.indigo
-        )
+          color: Color.fromARGB(255, 15, 52, 96)
+        ),
+        scaffoldBackgroundColor: Color.fromARGB(255, 241, 255, 	250)
       ),
     );
   }

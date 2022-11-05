@@ -97,7 +97,7 @@ class _MovieItem extends StatelessWidget {
         ),
       ),
       title: Text( movie.title ),
-      subtitle: Text( movie.originalTitle ),
+      subtitle: movie.releaseDate == null? Text( movie.originalTitle):Text( movie.releaseDate!),
       onTap: () {
         
         Navigator.pushNamed(context, 'details', arguments: movie );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:provider/provider.dart';
 
@@ -8,9 +9,6 @@ import 'package:peliculas/widgets/widgets.dart';
 
 
 class HomeScreen extends StatelessWidget {
-
-  
-  
   @override
   Widget build(BuildContext context) {
 
@@ -18,27 +16,39 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Películas en cines'),
+        leading: IconButton(
+            icon: Icon( Icons.menu ),
+            onPressed: () => {} 
+        ),
         elevation: 0,
         actions: [
           IconButton(
             icon: Icon( Icons.search_outlined ),
             onPressed: () => showSearch(context: context, delegate: MovieSearchDelegate() ),
-          )
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-
+            Center(
+              child: Text( 'Películas en cartelera', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
+            ),
             // Tarjetas principales
             CardSwiper( movies: moviesProvider.onDisplayMovies ),
 
-            // Slider de películas
+            // Slider de películas populares
             MovieSlider(
               movies: moviesProvider.popularMovies,// populares,
               title: 'Populares', // opcional
               onNextPage: () => moviesProvider.getPopularMovies(),
+            ),
+            SizedBox(height: 10,),
+            // Slider de películas populares
+            MovieSlider(
+              movies: moviesProvider.topRatedMovies,// populares,
+              title: 'Mejores Calificadas', // opcional
+              onNextPage: () => moviesProvider.getTopRatedMovies(),
             ),
             
           ],

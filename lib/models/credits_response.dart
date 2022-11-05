@@ -29,9 +29,9 @@ class CreditsResponse {
 class Cast {
     Cast({
         required this.adult,
-        required this.gender,
+        //required this.gender,
         required this.id,
-        required this.knownForDepartment,
+        this.knownForDepartment,
         required this.name,
         required this.originalName,
         required this.popularity,
@@ -45,9 +45,9 @@ class Cast {
     });
 
     bool adult;
-    int gender;
+    //int gender;
     int id;
-    String knownForDepartment;
+    String? knownForDepartment;
     String name;
     String originalName;
     double popularity;
@@ -70,9 +70,9 @@ class Cast {
 
     factory Cast.fromMap(Map<String, dynamic> json) => Cast(
         adult: json["adult"],
-        gender: json["gender"],
+        //gender: json["gender"],
         id: json["id"],
-        knownForDepartment: json["known_for_department"],
+        knownForDepartment: json["known_for_department"] == null ? null : json["known_for_department"] ,
         name: json["name"],
         originalName: json["original_name"],
         popularity: json["popularity"].toDouble(),

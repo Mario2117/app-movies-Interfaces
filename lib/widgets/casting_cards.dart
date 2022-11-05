@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:peliculas/models/models.dart';
 import 'package:peliculas/providers/movies_provider.dart';
 import 'package:provider/provider.dart';
@@ -29,15 +30,22 @@ class CastingCards extends StatelessWidget {
 
         final List<Cast> cast = snapshot.data!;
 
-        return Container(
-          margin: EdgeInsets.only( bottom: 30 ),
-          width: double.infinity,
-          height: 180,
-          child: ListView.builder(
-            itemCount: 10,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: ( _, int index) => _CastCard( cast[index] ),
-          ),
+        return Column(
+          children: [
+            SizedBox(height: 5,),
+            Text( 'Reparto', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+            SizedBox(height: 10,),
+            Container(
+              margin: EdgeInsets.only( bottom: 30 ),
+              width: double.infinity,
+              height: 220,
+              child: ListView.builder(
+                itemCount: cast.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: ( _, int index) => _CastCard( cast[index] ),
+              ),
+            ),
+          ],
         );
 
       },
@@ -62,14 +70,17 @@ class _CastCard extends StatelessWidget {
       child: Column(
         children: [
 
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: FadeInImage(
-              placeholder: AssetImage('assets/no-image.jpg'), 
-              image: NetworkImage( actor.fullProfilePath ),
-              height: 140,
-              width: 100,
-              fit: BoxFit.cover,
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, 'actorDet', arguments: actor.id ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: FadeInImage(
+                placeholder: AssetImage('assets/no-image.jpg'), 
+                image: NetworkImage( actor.fullProfilePath ),
+                height: 140,
+                width: 100,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           SizedBox( height: 5 ),
@@ -78,7 +89,15 @@ class _CastCard extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-          )
+            style: GoogleFonts.firaSans(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.black)
+          ),
+          actor.character != null?Text(
+            actor.character!,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.firaSans(fontSize: 12,fontStyle: FontStyle.italic ,color: Colors.black),
+          ):SizedBox()
 
         ],
       ),
