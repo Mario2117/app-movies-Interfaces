@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_card_swipper/flutter_card_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:peliculas/models/models.dart';
 import 'package:peliculas/widgets/widgets.dart';
@@ -26,7 +27,9 @@ class DetailsScreen extends StatelessWidget {
             delegate: SliverChildListDelegate([
               _PosterAndTitle( movie ),
               _Overview( movie ),
-              CastingCards( movie.id )
+              CastingCards( movie.id ),
+              _MovieRecs(movie.id),
+              _Gallery(movie.id)
             ])
           )
         ],
@@ -49,6 +52,12 @@ class _CustomAppBar extends StatelessWidget {
       expandedHeight: 200,
       floating: false,
       pinned: true,
+      actions: [
+          IconButton(
+            icon: Icon( Icons.home ),
+            onPressed: () => Navigator.pushNamed(context, 'home',),
+          ),
+        ],
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         titlePadding: EdgeInsets.all(0),
@@ -102,6 +111,13 @@ class _PosterAndTitleState extends State<_PosterAndTitle> {
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
+
+    var isInFavs = context.select<MoviesProvider, bool>(
+      // Here, we are only interested whether [item] is inside the cart.
+      (favList) => favList.favMoviesIds.contains(widget.movie.id),
+    );
+    print(isInFavs);
+
     return Container(
       margin: EdgeInsets.only( top: 20 ),
       padding: EdgeInsets.symmetric( horizontal: 20 ),
@@ -123,10 +139,13 @@ class _PosterAndTitleState extends State<_PosterAndTitle> {
               ),
               IconButton(
                 iconSize: 45,
-                icon: selected?const Icon(Icons.favorite,color: Colors.redAccent,):const Icon(Icons.favorite_border,color: Colors.white,),
-                onPressed: () {
+                icon: isInFavs?const Icon(Icons.favorite,color: Colors.redAccent,):const Icon(Icons.favorite_border,color: Colors.white,),
+                onPressed: isInFavs? null:() {
                   setState(() {
-                    selected = !selected;
+                    var favs = context.read<MoviesProvider>();
+                    favs.favMovie(widget.movie);
+                    var movies = context.read<MoviesProvider>().moviesFav;
+                    print(movies[0].id);
                   });
                 },
               ),
@@ -134,7 +153,7 @@ class _PosterAndTitleState extends State<_PosterAndTitle> {
           ),
           SizedBox( width: 20 ),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Column(
                 children: [
@@ -156,7 +175,7 @@ class _PosterAndTitleState extends State<_PosterAndTitle> {
                           )
                         ),
                       ),
-                      Text( widget.movie.voteAverage==0?'N.R.':'${widget.movie.voteAverage}', style: GoogleFonts.montserrat(fontSize: 30,fontWeight: FontWeight.bold) )
+                      Text( widget.movie.voteAverage==0?'N.R.':'${widget.movie.voteAverage.toStringAsFixed(1)}', style: GoogleFonts.montserrat(fontSize: 30,fontWeight: FontWeight.bold) )
                     ] 
                   ),
                   SizedBox(height: 15,),
@@ -251,7 +270,7 @@ class _MovieInfoState extends State<_MovieInfo> {
             SizedBox(height: 5,),
             RichText(text: TextSpan(children: [
               TextSpan( text: 'Fecha de estreno:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
-              TextSpan( text: ' ${DateFormat('MM-dd-yyyy').format(details.releaseDate)}', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.normal,color: Colors.black))
+              TextSpan( text: ' ${DateFormat('MMMM-dd-yyyy').format(details.releaseDate)}', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.normal,color: Colors.black))
             ])),
             SizedBox(height: 5,),
             RichText(text: TextSpan(children: [
@@ -268,6 +287,112 @@ class _MovieInfoState extends State<_MovieInfo> {
               TextSpan( text: 'Presupuesto:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
               TextSpan( text: ' ${NumberFormat("#,##0", "en_US").format(details.budget)}\$', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.normal,color: Colors.black))
             ])),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _MovieRecs extends StatefulWidget {//maybe borrar si no aplica usar el movieSlider
+
+  final int movieId;
+
+  const _MovieRecs( this.movieId );
+
+  @override
+  State<_MovieRecs> createState() => _MovieRecsState();
+}
+
+class _MovieRecsState extends State<_MovieRecs> {
+  @override
+  Widget build(BuildContext context) {
+    final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
+    return FutureBuilder(
+      future: moviesProvider.getMovieRecs(widget.movieId),
+      builder: ( _, AsyncSnapshot<List<Movie>> snapshot) {
+        
+        if( !snapshot.hasData ) {
+          return Container(
+            constraints: BoxConstraints(maxWidth: 150),
+            height: 180,
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        final List<Movie> movieReco = snapshot.data!;
+        
+        return MovieSlider(movies: movieReco , onNextPage: (){},title: 'Recomendaciones');
+
+      },
+    );
+  }
+}
+
+class _Gallery extends StatefulWidget {//maybe borrar si no aplica usar el movieSlider
+
+  final int movieId;
+
+  const _Gallery( this.movieId );
+
+  @override
+  State<_Gallery> createState() => _GalleryState();
+}
+
+class _GalleryState extends State<_Gallery> {
+  @override
+  Widget build(BuildContext context) {
+    final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
+    return FutureBuilder(
+      future: moviesProvider.getMovieImages(widget.movieId),
+      builder: ( _, AsyncSnapshot<List<Backdrop>> snapshot) {
+        
+        if( !snapshot.hasData ) {
+          return Container(
+            constraints: BoxConstraints(maxWidth: 150),
+            height: 180,
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        final List<Backdrop> movieImages = snapshot.data!;
+        final size = MediaQuery.of(context).size;
+        return Column(
+          children: [
+            Text( 'Galería', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+            SizedBox(height: 20,),
+            Container(
+              width: double.infinity,
+              height: 250,
+              child: Swiper(
+                itemCount: movieImages.length,
+                layout: SwiperLayout.CUSTOM,
+                customLayoutOption: new CustomLayoutOption(
+                    startIndex: 0,
+                    stateCount: 3
+                ).addTranslate([
+                  new Offset(-450.0, 10.0),
+                  new Offset(0.0, 0.0),
+                  new Offset(450.0, 10.0)
+                ]).addOpacity([0.6,1,0.6]
+                ),
+                itemWidth: size.width * 0.8,
+                itemHeight: size.height * 0.6,
+                itemBuilder: ( _ , int index ) {
+
+                  final image = movieImages[index];
+
+
+                  return FadeInImage(
+                    placeholder: AssetImage('assets/no-image.jpg'),
+                    image: NetworkImage( image.fullPosterImg ),
+                    fit: BoxFit.contain,
+                  );
+
+                },
+              ),
+            ),
+            SizedBox(height: 45,),
           ],
         );
       },

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:peliculas/helpers/debouncer.dart';
-import 'package:peliculas/models/actor_model.dart';
 
 import 'package:peliculas/models/models.dart';
 import 'package:peliculas/models/search_response.dart';
@@ -19,12 +18,18 @@ class MoviesProvider extends ChangeNotifier {
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies   = [];
   List<Movie> topRatedMovies  = [];
+  List<Movie> recsMovies  = [];
 
   Map<int, List<Cast>> moviesCast = {};
-  //Map<String, List<Movie>> actorCredits = {};
   List<Movie> actorCredits = [];
-
+  List<ActorImages> actorImages = [];
+  List<MovieImages> actorMovies = [];
   //ActorDetails actor = ;
+
+  List<Movie> favMovies  = [];
+  List<int> favMoviesIds  = [];
+  List<ActorDetails> favActors  = [];
+  List<int> favActorsIds  = [];
   
 
   int _popularPage = 0;
@@ -47,11 +52,41 @@ class MoviesProvider extends ChangeNotifier {
     this.getTopRatedMovies();
   }
 
+  /// Adds [item] to cart. This is the only way to modify the cart from outside.
+  void favMovie(Movie movie) {
+    favMovies.add(movie);
+    favMoviesIds.add(movie.id);
+    // This line tells [Model] that it should rebuild the widgets that
+    // depend on it.
+    notifyListeners();
+  }
+
+  void favActor(ActorDetails actor) {
+    favActors.add(actor);
+    favActorsIds.add(actor.id);
+    // This line tells [Model] that it should rebuild the widgets that
+    // depend on it.
+    notifyListeners();
+  }
+
+  List<Movie> get moviesFav {return favMovies;}
+
+
   Future<String> _getJsonData( String endpoint, [int page = 1] ) async {
     final url = Uri.https( _baseUrl, endpoint, {
       'api_key': _apiKey,
       'language': _language,
       'page': '$page'
+    });
+
+    // Await the http get response, then decode the json-formatted response.
+    final response = await http.get(url);
+    return response.body;
+  }
+
+  Future<String> _getJsonDataMovie( String endpoint ) async {
+    final url = Uri.https( _baseUrl, endpoint, {
+      'api_key': _apiKey
     });
 
     // Await the http get response, then decode the json-formatted response.
@@ -106,6 +141,16 @@ class MoviesProvider extends ChangeNotifier {
     return creditsResponse.cast;
   }
 
+  Future<List<Movie>> getMovieRecs( int movieId ) async {
+
+    final jsonData = await this._getJsonData('3/movie/$movieId/recommendations');
+    final recsMoviesResponse = MovieRecs.fromJson( jsonData );
+
+    recsMovies = recsMoviesResponse.results;
+
+    return recsMovies;
+  }
+
   Future<MovieDetails> getMovieDetails( int movieId ) async {
 
     final jsonData = await this._getJsonData('3/movie/$movieId');
@@ -134,6 +179,26 @@ class MoviesProvider extends ChangeNotifier {
     actorCredits = actorCreditsResponse.cast;
 
     return actorCredits;
+  }
+
+  Future<List<Profile>> getActorImages( int actorId ) async {
+
+    final jsonData = await this._getJsonData('3/person/$actorId/images');
+    final actorImagesResponse = ActorImages.fromJson( jsonData );
+    List<Profile> actorImages;
+    actorImages = actorImagesResponse.profiles;
+
+    return actorImages;
+  }
+
+  Future<List<Backdrop>> getMovieImages( int movieId ) async {
+
+    final jsonData = await this._getJsonDataMovie('3/movie/$movieId/images');
+    final movieImagesResponse = MovieImages.fromJson( jsonData );
+    List<Backdrop> movieImages;
+    movieImages = movieImagesResponse.backdrops;
+
+    return movieImages;
   }
 
   Future<List<Movie>> searchMovies( String query ) async {

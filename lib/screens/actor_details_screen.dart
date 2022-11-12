@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_card_swipper/flutter_card_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:peliculas/models/models.dart';
 import 'package:peliculas/widgets/widgets.dart';
@@ -40,7 +41,8 @@ class ActorDetailsScreen extends StatelessWidget {
                 delegate: SliverChildListDelegate([
                   _PosterAndTitle( actor ),
                   _Overview( actor ),
-                  _MovieInfo( castId )
+                  _MovieInfo( castId ),
+                  _Gallery(castId)
                 ])
               )
             ],
@@ -61,42 +63,51 @@ class _CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverAppBar(
-      backgroundColor: Color.fromARGB(255, 15, 52, 96),
-      expandedHeight: 200,
-      floating: false,
-      pinned: true,
-      flexibleSpace: FlexibleSpaceBar(
-        centerTitle: true,
-        titlePadding: EdgeInsets.all(0),
-        title: Container(
-          width: double.infinity,
-          alignment: Alignment.bottomCenter,
-          padding: EdgeInsets.only( bottom: 10, left: 10, right: 10),
-          color: Colors.black12,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                  actor.name,
-                  style: TextStyle( fontSize: 16 ),
-                  textAlign: TextAlign.center,
-                ),
-              Text(
-                  '(${actor.alsoKnownAs[0]})',
-                  style: TextStyle( fontSize: 10 ),
-                  textAlign: TextAlign.center,
-                ),
-            ],
+    final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
+    return FutureBuilder(
+      future: moviesProvider.getActorImages(actor.id),
+      builder: ( _, AsyncSnapshot<List<Profile>> snapshot) {
+        
+        return SliverAppBar(
+          backgroundColor: Color.fromARGB(255, 15, 52, 96),
+          expandedHeight: 300,
+          floating: false,
+          pinned: true,
+          actions: [
+            IconButton(
+              icon: Icon( Icons.home ),
+              onPressed: () => Navigator.pushNamed(context, 'home',),
+            ),
+          ],
+          flexibleSpace: FlexibleSpaceBar(
+            centerTitle: true,
+            titlePadding: EdgeInsets.all(0),
+            title: Container(
+              width: double.infinity,
+              alignment: Alignment.bottomCenter,
+              padding: EdgeInsets.only( bottom: 10, left: 10, right: 10),
+              color: Colors.black12,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    actor.name,
+                    style: TextStyle( fontSize: 16 ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            background: FadeInImage(
+              placeholder: AssetImage('assets/loading.gif'), 
+              image: NetworkImage( snapshot.data == null?'https://static.vecteezy.com/system/resources/thumbnails/008/174/698/original/animation-loading-circle-icon-loading-gif-loading-screen-gif-loading-spinner-gif-loading-animation-loading-on-black-background-free-video.jpg'
+              :snapshot.data![1].fullPosterImg),
+              fit: BoxFit.cover,
+              alignment: Alignment(0, -0.3),
+            ),
           ),
-        ),
-
-        background: FadeInImage(
-          placeholder: AssetImage('assets/loading.gif'), 
-          image: NetworkImage( actor.fullProfilePath ),
-          fit: BoxFit.cover,
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -119,11 +130,18 @@ class _PosterAndTitleState extends State<_PosterAndTitle> {
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
+
+    var isInFavsAct = context.select<MoviesProvider, bool>(
+      // Here, we are only interested whether [item] is inside the cart.
+      (favList) => favList.favActorsIds.contains(widget.actor.id),
+    );
+
     return Container(
       margin: EdgeInsets.only( top: 20 ),
       padding: EdgeInsets.symmetric( horizontal: 20 ),
-      child: Row(
+      child: Column(
         children: [
+          SizedBox( height: 20 ),
           Stack(
             alignment: AlignmentDirectional.bottomEnd,
             children: [
@@ -137,27 +155,47 @@ class _PosterAndTitleState extends State<_PosterAndTitle> {
               ),
               IconButton(
                 iconSize: 45,
-                icon: selected?const Icon(Icons.favorite,color: Colors.redAccent,):const Icon(Icons.favorite_border,color: Colors.white,),
-                onPressed: () {
+                icon: isInFavsAct?const Icon(Icons.favorite,color: Colors.redAccent,):const Icon(Icons.favorite_border,color: Colors.white,),
+                onPressed: isInFavsAct? null: () {
                   setState(() {
-                    selected = !selected;
+                    var favsAct = context.read<MoviesProvider>();
+                    favsAct.favActor(widget.actor);
+                    var actors = context.read<MoviesProvider>().favActors;
+                    print(actors[0].id);
                   });
                 },
               ),
             ],
           ),
-          SizedBox( width: 20 ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              SizedBox(height: 35,),
-              Row(
-                children: [
-                  //_MovieInfo(widget.actor.id)
-                ],
-              )
-            ],
-          )
+          SizedBox( height: 5),
+          Text(
+            '${widget.actor.name}',
+            style: TextStyle( fontSize: 25, fontWeight: FontWeight.bold ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox( height: 2),
+          Text(
+            widget.actor.deathday != null?'(${widget.actor.alsoKnownAs[0]})':'',
+            style: TextStyle( fontSize: 15, fontStyle: FontStyle.italic ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox( height: 5),
+          Text(
+            'Known for: ${widget.actor.knownForDepartment}',
+            style: TextStyle( fontSize: 15, fontWeight: FontWeight.bold ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox( height: 15),
+          Text(
+            'Born: ${DateFormat('MMMM dd yyyy').format(widget.actor.birthday)} | ${widget.actor.placeOfBirth}',
+            style: TextStyle( fontSize: 15, fontWeight: FontWeight.bold ),
+            textAlign: TextAlign.center,
+          ),
+          widget.actor.deathday != null? Text(
+            'Died: ${DateFormat('MMMM dd yyyy').format(widget.actor.deathday!)}',
+            style: TextStyle( fontSize: 15, fontWeight: FontWeight.bold ),
+            textAlign: TextAlign.center,
+          ):SizedBox(),
         ],
       ),
     );
@@ -203,7 +241,6 @@ class _MovieInfo extends StatefulWidget {//maybe borrar si no aplica usar el mov
 class _MovieInfoState extends State<_MovieInfo> {
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat("yyyy-MM-dd");
     final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
     return FutureBuilder(
       future: moviesProvider.getActorCredits(widget.actorId),
@@ -221,6 +258,77 @@ class _MovieInfoState extends State<_MovieInfo> {
         
         return MovieSlider(movies: actorCredits , onNextPage: (){},title: 'Aparece en');
 
+      },
+    );
+  }
+}
+
+class _Gallery extends StatefulWidget {//maybe borrar si no aplica usar el movieSlider
+
+  final int actorId;
+
+  const _Gallery( this.actorId );
+
+  @override
+  State<_Gallery> createState() => _GalleryState();
+}
+
+class _GalleryState extends State<_Gallery> {
+  @override
+  Widget build(BuildContext context) {
+    final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
+    return FutureBuilder(
+      future: moviesProvider.getActorImages(widget.actorId),
+      builder: ( _, AsyncSnapshot<List<Profile>> snapshot) {
+        
+        if( !snapshot.hasData ) {
+          return Container(
+            constraints: BoxConstraints(maxWidth: 150),
+            height: 180,
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        final List<Profile> actorImages = snapshot.data!;
+        final size = MediaQuery.of(context).size;
+        return Column(
+          children: [
+            Text( 'Galería', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+            SizedBox(height: 20,),
+            Container(
+              width: double.infinity,
+              height: 250,
+              child: Swiper(
+                itemCount: actorImages.length,
+                layout: SwiperLayout.CUSTOM,
+                customLayoutOption: new CustomLayoutOption(
+                    startIndex: -1,
+                    stateCount: 3
+                ).addTranslate([
+                  new Offset(-200.0, 10.0),
+                  new Offset(0.0, 0.0),
+                  new Offset(200.0, 10.0)
+                ]).addOpacity([0.6,1,0.6]
+                ),
+                itemWidth: size.width * 0.6,
+                itemHeight: size.height * 0.4,
+                itemBuilder: ( _ , int index ) {
+
+                  final image = actorImages[index];
+
+
+                  return FadeInImage(
+                    placeholder: AssetImage('assets/no-image.jpg'),
+                    image: NetworkImage( image.fullPosterImg ),
+                    fit: BoxFit.contain,
+                  );
+
+                },
+              ),
+            ),
+            SizedBox(height: 45,),
+          ],
+        );
       },
     );
   }
