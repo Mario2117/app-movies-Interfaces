@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         'home':    ( _ ) => HomeScreen(),
         'details': ( _ ) => DetailsScreen(),
         'actorDet': ( _ ) => ActorDetailsScreen(),
+        'favorites': ( _ ) => FavoritesScreen(),
       },
       theme: ThemeData.light().copyWith(
         appBarTheme: AppBarTheme(

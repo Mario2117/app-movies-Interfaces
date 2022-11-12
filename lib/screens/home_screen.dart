@@ -17,8 +17,8 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon( Icons.menu ),
-            onPressed: () => {} 
+            icon: Icon( Icons.favorite_rounded),
+            onPressed: () => Navigator.pushNamed(context, 'favorites',), 
         ),
         elevation: 0,
         actions: [
