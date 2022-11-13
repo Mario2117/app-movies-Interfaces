@@ -69,6 +69,22 @@ class MoviesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeFavMovie(Movie movie) {
+    favMovies.remove(movie);
+    favMoviesIds.remove(movie.id);
+    // This line tells [Model] that it should rebuild the widgets that
+    // depend on it.
+    notifyListeners();
+  }
+
+  void removeFavActor(ActorDetails actor) {
+    favActors.remove(actor);
+    favActorsIds.remove(actor.id);
+    // This line tells [Model] that it should rebuild the widgets that
+    // depend on it.
+    notifyListeners();
+  }
+
   List<Movie> get moviesFav {return favMovies;}
 
 

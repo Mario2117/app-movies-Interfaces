@@ -140,7 +140,15 @@ class _PosterAndTitleState extends State<_PosterAndTitle> {
               IconButton(
                 iconSize: 45,
                 icon: isInFavs?const Icon(Icons.favorite,color: Colors.redAccent,):const Icon(Icons.favorite_border,color: Colors.white,),
-                onPressed: isInFavs? null:() {
+                onPressed: isInFavs? () {
+                  setState(() {
+                    var favs = context.read<MoviesProvider>();
+                    favs.removeFavMovie(widget.movie);
+                    var movies = context.read<MoviesProvider>().moviesFav;
+                    print(movies[0].id);
+                  });
+                }:
+                () {
                   setState(() {
                     var favs = context.read<MoviesProvider>();
                     favs.favMovie(widget.movie);

@@ -12,9 +12,9 @@ import 'package:peliculas/widgets/widgets.dart';
 class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
+    final ScrollController scrollController = new ScrollController();
     final moviesProvider = Provider.of<MoviesProvider>(context);
-
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -29,35 +29,70 @@ class FavoritesScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: Text( 'Mis Favoritas', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
-            ),
-            // Tarjetas principales
-            moviesProvider.favMovies.isEmpty
-            ?Container(
-                child: Center(
-                  child: Icon( Icons.movie_creation_outlined, color: Colors.black38, size: 130, ),
+      body: Column(
+        children: [
+          Column(
+            children: [
+              Center(
+                child: Text( 'Mis Favoritas', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
+              ),
+              // Tarjetas principales
+              moviesProvider.favMovies.isEmpty
+              ?Container(
+                  child: Center(
+                    child: Icon( Icons.movie_creation_outlined, color: Colors.black38, size: 130, ),
+                  ),
+                )
+              :Container(
+                width: size.width*0.7,
+                height: size.height * 0.42,
+                child: GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, 'details', arguments: moviesProvider.favMovies[0]),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: FadeInImage(
+                      placeholder: AssetImage('assets/no-image.jpg'),
+                      image: NetworkImage( moviesProvider.favMovies[0].fullPosterImg ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              )
-            :CardSwiper( movies: moviesProvider.favMovies ),
-            moviesProvider.favActors.isEmpty
-            ?Container(
-                child: Center(
-                  child: Icon( Icons.person_add, color: Colors.black38, size: 130, ),
-                ),
-              )
-            :Column(
+              ),
+              SizedBox(height: 20),
+              moviesProvider.favMovies.isEmpty
+              ?SizedBox()
+              :MovieGrid(movies: moviesProvider.favMovies),
+            ],
+          ),
+          moviesProvider.favActors.isEmpty
+          ?Container(
+            /* constraints: BoxConstraints(
+              maxHeight: 250
+            ), */
+            child: Column(
               children: [
                 SizedBox(height: 5,),
                 Text( 'Actores Favoritos', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
-                SizedBox(height: 10,),
+                //SizedBox(height: 10,),
                 Container(
-                  margin: EdgeInsets.only( bottom: 30 ),
+                    child: Center(
+                      child: Icon( Icons.person_add, color: Colors.black38, size: 130, ),
+                    ),
+                  ),
+              ],
+            ),
+          )
+          :Container(
+            /* constraints: BoxConstraints(
+              maxHeight: size.height*0.35
+            ), */
+            child: Column(
+              children: [
+                Text( 'Actores Favoritos', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+                SizedBox(height: 5,),
+                Container(
                   width: double.infinity,
-                  height: 201,
+                  height: 170,
                   child: ListView.builder(
                     itemCount: moviesProvider.favActors.length,
                     scrollDirection: Axis.horizontal,
@@ -66,22 +101,8 @@ class FavoritesScreen extends StatelessWidget {
                 ),
               ],
             ),
-            // Slider de películas populares
-            /* MovieSlider(
-              movies: moviesProvider.popularMovies,// populares,
-              title: 'Populares', // opcional
-              onNextPage: () => moviesProvider.getPopularMovies(),
-            ),
-            SizedBox(height: 10,),
-            // Slider de películas populares
-            MovieSlider(
-              movies: moviesProvider.topRatedMovies,// populares,
-              title: 'Mejores Calificadas', // opcional
-              onNextPage: () => moviesProvider.getTopRatedMovies(),
-            ), */
-            
-          ],
-        ),
+          )
+        ],
       )
     );
   }
