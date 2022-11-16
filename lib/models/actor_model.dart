@@ -34,7 +34,7 @@ class ActorDetails {
     String name;
     String placeOfBirth;
     double popularity;
-    String profilePath;
+    String? profilePath;
 
     get fullProfilePath {
       if ( this.profilePath != null )
@@ -54,10 +54,10 @@ class ActorDetails {
         gender: json["gender"],
         //homepage: json["homepage"],
         id: json["id"],
-        imdbId: json["imdb_id"],
-        knownForDepartment: json["known_for_department"],
-        name: json["name"],
-        placeOfBirth: json["place_of_birth"],
+        imdbId: json["imdb_id"] == null ? '': json["imdb_id"],
+        knownForDepartment: json["known_for_department"]== null ? '': json["known_for_department"],
+        name: json["name"]== null ? '': json["name"],
+        placeOfBirth: json["place_of_birth"]== null ? '':json["place_of_birth"] ,
         popularity: json["popularity"].toDouble(),
         profilePath: json["profile_path"],
     );

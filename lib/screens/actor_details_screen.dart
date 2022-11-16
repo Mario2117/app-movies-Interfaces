@@ -102,7 +102,8 @@ class _CustomAppBar extends StatelessWidget {
               placeholder: AssetImage('assets/loading.gif'), 
               image: NetworkImage( snapshot.data == null?'https://static.vecteezy.com/system/resources/thumbnails/008/174/698/original/animation-loading-circle-icon-loading-gif-loading-screen-gif-loading-spinner-gif-loading-animation-loading-on-black-background-free-video.jpg'
               :snapshot.data!.length>1? snapshot.data![1].fullPosterImg
-              :snapshot.data![0].fullPosterImg ),
+              :snapshot.data!.isEmpty? 'https://www.nailseatowncouncil.gov.uk/wp-content/uploads/blank-profile-picture-973460_1280.jpg'
+              :snapshot.data![0].fullPosterImg),
               fit: BoxFit.cover,
               alignment: Alignment(0, -0.3),
             ),
@@ -221,7 +222,7 @@ class _Overview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return actor.biography.length>3?Column(
       children: [
         SizedBox(height: 20,),
         Text( 'Biografía', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
@@ -234,7 +235,7 @@ class _Overview extends StatelessWidget {
           ),
         ),
       ],
-    );
+    ):SizedBox();
   }
 }
 
@@ -301,7 +302,7 @@ class _GalleryState extends State<_Gallery> {
 
         final List<Profile> actorImages = snapshot.data!;
         final size = MediaQuery.of(context).size;
-        return Column(
+        return actorImages.isNotEmpty? Column(
           children: [
             Text( 'Galería', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
             SizedBox(height: 20,),
@@ -338,7 +339,7 @@ class _GalleryState extends State<_Gallery> {
             ),
             SizedBox(height: 45,),
           ],
-        );
+        ):SizedBox();
       },
     );
   }
