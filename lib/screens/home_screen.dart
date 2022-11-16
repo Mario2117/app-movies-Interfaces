@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             Center(
-              child: Text( 'Películas en cartelera', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
+              child: Text( 'En cartelera', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
             ),
             // Tarjetas principales
             CardSwiper( movies: moviesProvider.onDisplayMovies ),

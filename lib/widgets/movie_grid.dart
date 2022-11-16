@@ -34,7 +34,6 @@ class _MovieGridState extends State<MovieGrid> {
   @override
   Widget build(BuildContext context) {
     List<Movie> movie = widget.movies.skip(1).toList();
-    print(movie);
     return Container(
       width: double.infinity,
       height: 275, 
@@ -76,7 +75,6 @@ class _MoviePoster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(movie.genreIds);
     movie.heroId = heroId;
 
     return Container(

@@ -30,7 +30,6 @@ class MoviesProvider extends ChangeNotifier {
   List<int> favMoviesIds  = [];
   List<ActorDetails> favActors  = [];
   List<int> favActorsIds  = [];
-  
 
   int _popularPage = 0;
   int _topRatedPage = 0;
@@ -80,6 +79,8 @@ class MoviesProvider extends ChangeNotifier {
   void removeFavActor(ActorDetails actor) {
     favActors.remove(actor);
     favActorsIds.remove(actor.id);
+    print( favActors);
+    print( favActorsIds);
     // This line tells [Model] that it should rebuild the widgets that
     // depend on it.
     notifyListeners();
@@ -127,7 +128,6 @@ class MoviesProvider extends ChangeNotifier {
 
     final jsonData = await this._getJsonData('3/movie/popular', _popularPage );
     final popularResponse = PopularResponse.fromJson( jsonData );
-    print(popularResponse);
     
     popularMovies = [ ...popularMovies, ...popularResponse.results ];
     notifyListeners();
@@ -139,7 +139,6 @@ class MoviesProvider extends ChangeNotifier {
 
     final jsonData = await this._getJsonData('3/movie/top_rated', _topRatedPage );
     final topRatedResponse = PopularResponse.fromJson( jsonData );
-    print(topRatedResponse);
     
     topRatedMovies = [ ...topRatedMovies, ...topRatedResponse.results ];
     notifyListeners();
@@ -177,6 +176,26 @@ class MoviesProvider extends ChangeNotifier {
     return movieDetail;
   }
 
+  Future<MovieProv> getMovieProv( int movieId ) async {
+
+    final jsonData = await this._getJsonDataMovie('3/movie/$movieId/watch/providers');
+    final movieDetailsResponse = MovieProv.fromJson( jsonData );
+
+    MovieProv movieProv = movieDetailsResponse;
+
+    return movieProv;
+  }
+
+  Future<List<Backdrop>> getMovieImages( int movieId ) async {
+
+    final jsonData = await this._getJsonDataMovie('3/movie/$movieId/images');
+    final movieImagesResponse = MovieImages.fromJson( jsonData );
+    List<Backdrop> movieImages;
+    movieImages = movieImagesResponse.backdrops;
+
+    return movieImages;
+  }
+
   Future<ActorDetails> getActorDetails( int actorId ) async {
 
     final jsonData = await this._getJsonData('3/person/$actorId');
@@ -205,16 +224,6 @@ class MoviesProvider extends ChangeNotifier {
     actorImages = actorImagesResponse.profiles;
 
     return actorImages;
-  }
-
-  Future<List<Backdrop>> getMovieImages( int movieId ) async {
-
-    final jsonData = await this._getJsonDataMovie('3/movie/$movieId/images');
-    final movieImagesResponse = MovieImages.fromJson( jsonData );
-    List<Backdrop> movieImages;
-    movieImages = movieImagesResponse.backdrops;
-
-    return movieImages;
   }
 
   Future<List<Movie>> searchMovies( String query ) async {

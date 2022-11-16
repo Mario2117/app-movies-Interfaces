@@ -101,7 +101,8 @@ class _CustomAppBar extends StatelessWidget {
             background: FadeInImage(
               placeholder: AssetImage('assets/loading.gif'), 
               image: NetworkImage( snapshot.data == null?'https://static.vecteezy.com/system/resources/thumbnails/008/174/698/original/animation-loading-circle-icon-loading-gif-loading-screen-gif-loading-spinner-gif-loading-animation-loading-on-black-background-free-video.jpg'
-              :snapshot.data![1].fullPosterImg),
+              :snapshot.data!.length>1? snapshot.data![1].fullPosterImg
+              :snapshot.data![0].fullPosterImg ),
               fit: BoxFit.cover,
               alignment: Alignment(0, -0.3),
             ),

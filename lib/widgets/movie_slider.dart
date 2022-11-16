@@ -85,7 +85,6 @@ class _MoviePoster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(movie.genreIds);
     movie.heroId = heroId;
 
     return Container(

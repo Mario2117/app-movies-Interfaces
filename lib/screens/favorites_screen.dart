@@ -34,13 +34,18 @@ class FavoritesScreen extends StatelessWidget {
           Column(
             children: [
               Center(
-                child: Text( 'Mis Favoritas', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
+                child: Text( 'Favoritas', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
               ),
               // Tarjetas principales
               moviesProvider.favMovies.isEmpty
               ?Container(
                   child: Center(
-                    child: Icon( Icons.movie_creation_outlined, color: Colors.black38, size: 130, ),
+                    child: Column(
+                      children: [Icon( Icons.movie_creation_outlined, color: Colors.black38, size: 130, ),
+                      Text( 'Añade tus películas y actores favoritos haciendo click al corazón que se muestra en su perfil. ', textAlign: TextAlign.center, style: GoogleFonts.eczar(fontSize: 28)),
+                      //Icon( Icons.favorite, color: Colors.red, size: 30, ),
+                      ]
+                    ),
                   ),
                 )
               :Container(
@@ -66,9 +71,6 @@ class FavoritesScreen extends StatelessWidget {
           ),
           moviesProvider.favActors.isEmpty
           ?Container(
-            /* constraints: BoxConstraints(
-              maxHeight: 250
-            ), */
             child: Column(
               children: [
                 SizedBox(height: 5,),

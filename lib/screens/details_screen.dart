@@ -198,12 +198,14 @@ class _PosterAndTitleState extends State<_PosterAndTitle> {
                   )
                 ],
               ),
-              SizedBox(height: 35,),
+              SizedBox(height: 5,),
               Row(
                 children: [
-                  _MovieInfo(widget.movie.id)
+                  _MovieInfo(widget.movie.id),
                 ],
-              )
+              ),
+              SizedBox(height: 15,),
+              _MoviesProv(widget.movie.id),
             ],
           )
         ],
@@ -408,6 +410,54 @@ class _GalleryState extends State<_Gallery> {
   }
 }
 
+class _MoviesProv extends StatefulWidget {
+
+  final int movieId;
+
+  const _MoviesProv( this.movieId );
+
+  @override
+  State<_MoviesProv> createState() => _MoviesProvState();
+}
+
+class _MoviesProvState extends State<_MoviesProv> {
+  @override
+  Widget build(BuildContext context) {
+    final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
+    return FutureBuilder(
+      future: moviesProvider.getMovieProv(widget.movieId),
+      builder: ( _, AsyncSnapshot<MovieProv> snapshot) {
+        
+        if( !snapshot.hasData ) {
+          return Container(
+            constraints: BoxConstraints(maxWidth: 150),
+            height: 180,
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        final MovieProv details = snapshot.data!;
+        
+        return details.results.us!.flatrate !=null?Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("Streaming en: ",style: GoogleFonts.montserrat(fontSize: 14,fontWeight: FontWeight.bold) ),
+            SizedBox(
+              height: 75,
+              child: FadeInImage(
+                placeholder: AssetImage('assets/no-image.jpg'),
+                image: NetworkImage( details.results.us!.flatrate![0].fullPosterImg ),
+                fit: BoxFit.contain,
+              ),
+            ),
+            Text("${details.results.us!.flatrate![0].providerName}",style: GoogleFonts.montserrat(fontSize: 14,fontWeight: FontWeight.bold) )
+            
+          ],
+        ):SizedBox();
+      },
+    );
+  }
+}
 
 
 

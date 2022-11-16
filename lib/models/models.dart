@@ -1,3 +1,4 @@
+export 'package:peliculas/models/movie_prov_model.dart';
 export 'package:peliculas/models/actor_credits_model.dart';
 export 'package:peliculas/models/actor_model.dart';
 export 'package:peliculas/models/movie_details.dart';
