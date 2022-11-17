@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             Center(
-              child: Text( 'En cartelera', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
+              child: Text( 'In Theaters', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
             ),
             // Tarjetas principales
             CardSwiper( movies: moviesProvider.onDisplayMovies ),
@@ -40,14 +40,14 @@ class HomeScreen extends StatelessWidget {
             // Slider de películas populares
             MovieSlider(
               movies: moviesProvider.popularMovies,// populares,
-              title: 'Populares', // opcional
+              title: 'Popular', // opcional
               onNextPage: () => moviesProvider.getPopularMovies(),
             ),
             SizedBox(height: 10,),
             // Slider de películas populares
             MovieSlider(
               movies: moviesProvider.topRatedMovies,// populares,
-              title: 'Mejores Calificadas', // opcional
+              title: 'Top Rated', // opcional
               onNextPage: () => moviesProvider.getTopRatedMovies(),
             ),
             

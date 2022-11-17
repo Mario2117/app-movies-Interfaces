@@ -226,7 +226,7 @@ class _Overview extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 20,),
-        Text( 'Sinópsis', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+        Text( 'Synopsis', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
         Container(
           padding: EdgeInsets.symmetric( horizontal: 30, vertical: 10),
           child: Text(
@@ -274,27 +274,27 @@ class _MovieInfoState extends State<_MovieInfo> {
           children: [
             details.voteAverage==0?
             RichText(text: TextSpan(children: [
-              TextSpan( text: 'Estatus:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
+              TextSpan( text: 'Status:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
               TextSpan( text: ' ${details.status}', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.normal,color: Colors.black))
             ])):SizedBox(),
             SizedBox(height: 5,),
             RichText(text: TextSpan(children: [
-              TextSpan( text: 'Fecha de estreno:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
+              TextSpan( text: 'Release date:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
               TextSpan( text: ' ${DateFormat('MMMM-dd-yyyy').format(details.releaseDate)}', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.normal,color: Colors.black))
             ])),
             SizedBox(height: 5,),
             RichText(text: TextSpan(children: [
-              TextSpan( text: 'Género:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
+              TextSpan( text: 'Genre:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
               TextSpan( text: ' ${details.genres[0].name}', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.normal,color: Colors.black))
             ])),
             SizedBox(height: 5,),
             RichText(text: TextSpan(children: [
-              TextSpan( text: 'Duración:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
-              TextSpan( text: ' ${details.runtime} minutos', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.normal,color: Colors.black))
+              TextSpan( text: 'Duration:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
+              TextSpan( text: ' ${details.runtime} minutes', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.normal,color: Colors.black))
             ])),
             SizedBox(height: 5,),
             RichText(text: TextSpan(children: [
-              TextSpan( text: 'Presupuesto:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
+              TextSpan( text: 'Budget:', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black)),
               TextSpan( text: ' ${NumberFormat("#,##0", "en_US").format(details.budget)}\$', style: GoogleFonts.firaSans(fontSize: 13,fontWeight: FontWeight.normal,color: Colors.black))
             ])),
           ],
@@ -332,7 +332,7 @@ class _MovieRecsState extends State<_MovieRecs> {
 
         final List<Movie> movieReco = snapshot.data!;
         
-        return MovieSlider(movies: movieReco , onNextPage: (){},title: 'Recomendaciones');
+        return MovieSlider(movies: movieReco , onNextPage: (){},title: 'More like this');
 
       },
     );
@@ -369,7 +369,7 @@ class _GalleryState extends State<_Gallery> {
         final size = MediaQuery.of(context).size;
         return Column(
           children: [
-            Text( 'Galería', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+            Text( 'Gallery', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
             SizedBox(height: 20,),
             Container(
               width: double.infinity,
@@ -438,10 +438,13 @@ class _MoviesProvState extends State<_MoviesProv> {
 
         final MovieProv details = snapshot.data!;
         
+        if( details.results.us == null ) {
+          return SizedBox();
+        }
         return details.results.us!.flatrate !=null?Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Streaming en: ",style: GoogleFonts.montserrat(fontSize: 14,fontWeight: FontWeight.bold) ),
+            Text("Streaming on: ",style: GoogleFonts.montserrat(fontSize: 14,fontWeight: FontWeight.bold) ),
             SizedBox(
               height: 75,
               child: FadeInImage(

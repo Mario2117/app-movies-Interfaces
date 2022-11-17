@@ -225,7 +225,7 @@ class _Overview extends StatelessWidget {
     return actor.biography.length>3?Column(
       children: [
         SizedBox(height: 20,),
-        Text( 'Biografía', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+        Text( 'Biography', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
         Container(
           padding: EdgeInsets.symmetric( horizontal: 30, vertical: 10),
           child: Text(
@@ -267,7 +267,7 @@ class _MovieInfoState extends State<_MovieInfo> {
 
         final List<Movie> actorCredits = snapshot.data!;
         
-        return MovieSlider(movies: actorCredits , onNextPage: (){},title: 'Aparece en');
+        return MovieSlider(movies: actorCredits , onNextPage: (){},title: 'Appears on:');
 
       },
     );
@@ -304,7 +304,7 @@ class _GalleryState extends State<_Gallery> {
         final size = MediaQuery.of(context).size;
         return actorImages.isNotEmpty? Column(
           children: [
-            Text( 'Galería', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+            Text( 'Gallery', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
             SizedBox(height: 20,),
             Container(
               width: double.infinity,

@@ -33,7 +33,7 @@ class CastingCards extends StatelessWidget {
         return Column(
           children: [
             SizedBox(height: 5,),
-            Text( 'Reparto', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+            Text( 'Cast', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
             SizedBox(height: 10,),
             Container(
               margin: EdgeInsets.only( bottom: 30 ),

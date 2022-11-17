@@ -34,7 +34,7 @@ class FavoritesScreen extends StatelessWidget {
           Column(
             children: [
               Center(
-                child: Text( 'Favoritas', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
+                child: Text( 'Favorites', style: GoogleFonts.eczar(fontSize: 32, fontWeight: FontWeight.bold)),
               ),
               // Tarjetas principales
               moviesProvider.favMovies.isEmpty
@@ -42,7 +42,7 @@ class FavoritesScreen extends StatelessWidget {
                   child: Center(
                     child: Column(
                       children: [Icon( Icons.movie_creation_outlined, color: Colors.black38, size: 130, ),
-                      Text( 'Añade tus películas y actores favoritos haciendo click al corazón que se muestra en su perfil. ', textAlign: TextAlign.center, style: GoogleFonts.eczar(fontSize: 28)),
+                      Text( 'Add your favorite films and actors by clicking on the heart at their profile.', textAlign: TextAlign.center, style: GoogleFonts.eczar(fontSize: 28)),
                       //Icon( Icons.favorite, color: Colors.red, size: 30, ),
                       ]
                     ),
@@ -74,7 +74,7 @@ class FavoritesScreen extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 5,),
-                Text( 'Actores Favoritos', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+                Text( 'Favorite Actors', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
                 //SizedBox(height: 10,),
                 Container(
                     child: Center(
@@ -90,7 +90,7 @@ class FavoritesScreen extends StatelessWidget {
             ), */
             child: Column(
               children: [
-                Text( 'Actores Favoritos', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
+                Text( 'Favorite Actors', style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold) ),
                 SizedBox(height: 5,),
                 Container(
                   width: double.infinity,
