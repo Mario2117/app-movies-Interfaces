@@ -163,16 +163,12 @@ class _PosterAndTitleState extends State<_PosterAndTitle> {
                   setState(() {
                     var favsAct = context.read<MoviesProvider>();
                     favsAct.removeFavActor(widget.actor);
-                    var actors = context.read<MoviesProvider>().favActors;
-                    print(actors[0].id);
                   });
                 }
                 : () {
                   setState(() {
                     var favsAct = context.read<MoviesProvider>();
                     favsAct.favActor(widget.actor);
-                    var actors = context.read<MoviesProvider>().favActors;
-                    print(actors[0].id);
                   });
                 },
               ),

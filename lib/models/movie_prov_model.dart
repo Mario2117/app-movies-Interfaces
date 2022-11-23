@@ -102,8 +102,8 @@ class Ae {
     factory Ae.fromJson(String str) => Ae.fromMap(json.decode(str));
 
     factory Ae.fromMap(Map<String, dynamic> json) => Ae(
-        link: json["link"],
-        buy: List<Flatrate>.from(json["buy"].map((x) => Flatrate.fromMap(x))),
+        link: json["link"] == null ? null : json["link"],
+        buy: json["buy"] == null ? null : List<Flatrate>.from(json["buy"].map((x) => Flatrate.fromMap(x))),
         flatrate: json["flatrate"] == null ? null : List<Flatrate>.from(json["flatrate"].map((x) => Flatrate.fromMap(x))),
         rent: json["rent"] == null ? null : List<Flatrate>.from(json["rent"].map((x) => Flatrate.fromMap(x))),
         free: json["free"] == null ? null : List<Flatrate>.from(json["free"].map((x) => Flatrate.fromMap(x))),

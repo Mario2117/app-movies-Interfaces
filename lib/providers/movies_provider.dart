@@ -77,8 +77,10 @@ class MoviesProvider extends ChangeNotifier {
   }
 
   void removeFavActor(ActorDetails actor) {
-    favActors.remove(actor);
+    
+    final iRemove = favActorsIds.indexWhere((element) => element == actor.id);
     favActorsIds.remove(actor.id);
+    favActors.removeAt(iRemove);
     print( favActors);
     print( favActorsIds);
     // This line tells [Model] that it should rebuild the widgets that

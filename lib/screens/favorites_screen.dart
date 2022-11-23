@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:peliculas/models/actor_model.dart';
+import 'package:art_sweetalert/art_sweetalert.dart';
 
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,19 @@ class FavoritesScreen extends StatelessWidget {
         ),
         elevation: 0,
         actions: [
+          MaterialButton(
+                onPressed: () {
+                  ArtSweetAlert.show(
+                    context: context,
+                    artDialogArgs: ArtDialogArgs(
+                      type: ArtSweetAlertType.question,
+                      title: "Add to your favorites!",
+                      text: "Add your favorite films and actors by clicking on the heart at their profile."
+                    )
+                  );
+                },
+                child: Icon( Icons.help, color: Colors.white, size: 25, ),
+              ),
           IconButton(
             icon: Icon( Icons.search_outlined ),
             onPressed: () => showSearch(context: context, delegate: MovieSearchDelegate() ),
@@ -42,7 +56,8 @@ class FavoritesScreen extends StatelessWidget {
                   child: Center(
                     child: Column(
                       children: [Icon( Icons.movie_creation_outlined, color: Colors.black38, size: 130, ),
-                      Text( 'Add your favorite films and actors by clicking on the heart at their profile.', textAlign: TextAlign.center, style: GoogleFonts.eczar(fontSize: 28)),
+                      
+                      //Text( 'Add your favorite films and actors by clicking on the heart at their profile.', textAlign: TextAlign.center, style: GoogleFonts.eczar(fontSize: 28)),
                       //Icon( Icons.favorite, color: Colors.red, size: 30, ),
                       ]
                     ),
@@ -118,6 +133,8 @@ class _ActorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(actor.name);
+    print(actor.id);
     return Container(
       margin: EdgeInsets.symmetric( horizontal: 10),
       width: 110,
