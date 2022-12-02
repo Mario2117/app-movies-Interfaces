@@ -445,6 +445,7 @@ class _MoviesProvState extends State<_MoviesProv> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text("Streaming on: ",style: GoogleFonts.montserrat(fontSize: 14,fontWeight: FontWeight.bold) ),
+            SizedBox(height: 2,),
             SizedBox(
               height: 75,
               child: FadeInImage(

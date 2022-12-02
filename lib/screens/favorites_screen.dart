@@ -22,6 +22,18 @@ class FavoritesScreen extends StatelessWidget {
             icon: Icon( Icons.home ),
               onPressed: () => Navigator.pushNamed(context, 'home',), 
         ),
+        title: Row(
+
+          children: [SizedBox(width: 165,),
+            SizedBox(
+                height: 75,
+                child: FadeInImage(
+                  placeholder: AssetImage('assets/chaplin.png'),
+                  image: AssetImage( 'assets/chaplin.png'),
+                  fit: BoxFit.contain,
+                ),
+              ),]
+        ),
         elevation: 0,
         actions: [
           MaterialButton(
