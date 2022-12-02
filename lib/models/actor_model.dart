@@ -24,7 +24,7 @@ class ActorDetails {
     //bool adult;
     List<String> alsoKnownAs;
     String biography;
-    DateTime birthday;
+    DateTime? birthday;
     DateTime? deathday;
     int gender;
     //String homepage;
@@ -48,8 +48,8 @@ class ActorDetails {
     factory ActorDetails.fromMap(Map<String, dynamic> json) => ActorDetails(
         //adult: json["adult"],
         alsoKnownAs: List<String>.from(json["also_known_as"].map((x) => x)),
-        biography: json["biography"],
-        birthday: DateTime.parse(json["birthday"]),
+        biography: json["biography"] == null ? null : json["biography"],
+        birthday: json["birthday"] == null ? null : DateTime.parse(json["birthday"]),
         deathday: json["deathday"] == null ? null : DateTime.parse(json["deathday"]),
         gender: json["gender"],
         //homepage: json["homepage"],

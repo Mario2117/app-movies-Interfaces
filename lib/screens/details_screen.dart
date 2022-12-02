@@ -453,7 +453,12 @@ class _MoviesProvState extends State<_MoviesProv> {
                 fit: BoxFit.contain,
               ),
             ),
-            Text("${details.results.us!.flatrate![0].providerName}",style: GoogleFonts.montserrat(fontSize: 14,fontWeight: FontWeight.bold) )
+            Container(
+              constraints: BoxConstraints(
+                maxWidth: 200
+              )
+              ,
+              child: Text("${details.results.us!.flatrate![0].providerName}",style: GoogleFonts.montserrat(fontSize: 14,fontWeight: FontWeight.bold),overflow: TextOverflow.clip, textAlign: TextAlign.center,))
             
           ],
         ):SizedBox();

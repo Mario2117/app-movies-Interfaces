@@ -31,7 +31,11 @@ class FavoritesScreen extends StatelessWidget {
                     artDialogArgs: ArtDialogArgs(
                       type: ArtSweetAlertType.question,
                       title: "Add to your favorites!",
-                      text: "Add your favorite films and actors by clicking on the heart at their profile."
+                      text: "Add your favorite films and actors by clicking on the heart at their profile.",
+                      /* decorationImage: DecorationImage(
+                        image: NetworkImage( 'https://myhero.com/content/images/thumbs/0147520.jpeg?t=1648656270418'),
+                        fit: BoxFit.cover,
+                      ) */
                     )
                   );
                 },

@@ -42,7 +42,7 @@ class ActorDetailsScreen extends StatelessWidget {
                   _PosterAndTitle( actor ),
                   _Overview( actor ),
                   _MovieInfo( castId ),
-                  _Gallery(castId)
+                  _Gallery( castId )
                 ])
               )
             ],
@@ -193,11 +193,11 @@ class _PosterAndTitleState extends State<_PosterAndTitle> {
             textAlign: TextAlign.center,
           ),
           SizedBox( height: 15),
-          Text(
-            'Born: ${DateFormat('MMMM dd yyyy').format(widget.actor.birthday)} | ${widget.actor.placeOfBirth}',
+          widget.actor.birthday != null? Text(
+            'Born: ${DateFormat('MMMM dd yyyy').format(widget.actor.birthday!)} | ${widget.actor.placeOfBirth}',
             style: TextStyle( fontSize: 15, fontWeight: FontWeight.bold ),
             textAlign: TextAlign.center,
-          ),
+          ):SizedBox(),
           widget.actor.deathday != null? Text(
             'Died: ${DateFormat('MMMM dd yyyy').format(widget.actor.deathday!)}',
             style: TextStyle( fontSize: 15, fontWeight: FontWeight.bold ),
@@ -231,7 +231,7 @@ class _Overview extends StatelessWidget {
           ),
         ),
       ],
-    ):SizedBox();
+    ):SizedBox(height: 20,);
   }
 }
 
